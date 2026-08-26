@@ -7,6 +7,7 @@
 
 namespace DevLabDDP {
 
+constexpr uint16_t DEVICE_ANY      = 0x0000U;
 constexpr uint16_t DEVICE_JOYSTICK = 0x0101U;
 constexpr uint16_t DEVICE_TEMT6000 = 0x0102U;
 constexpr uint16_t DEVICE_DS18B20  = 0x0103U;
@@ -83,7 +84,8 @@ class Master {
 
   bool matchesExpectedDevice(uint8_t address, DeviceInfo *result = nullptr) {
     DeviceInfo local;
-    if (!identify(address, local) || local.deviceId != expectedDeviceId_) return false;
+    if (!identify(address, local) ||
+        (expectedDeviceId_ != DEVICE_ANY && local.deviceId != expectedDeviceId_)) return false;
     if (result != nullptr) *result = local;
     return true;
   }
@@ -156,7 +158,8 @@ inline void printDeviceInfo(Print &out, uint8_t address, const DeviceInfo &info,
   out.print(" firmware="); out.print(info.firmwareMajor); out.print('.'); out.print(info.firmwareMinor);
   out.print(" hardware="); out.print(info.hardwareMajor); out.print('.'); out.print(info.hardwareMinor);
   out.print(" caps=0x"); out.print(info.capabilities, HEX);
-  out.print(" match="); out.println(info.deviceId == expectedDeviceId ? "yes" : "NO");
+  out.print(" match=");
+  out.println(expectedDeviceId == DEVICE_ANY || info.deviceId == expectedDeviceId ? "yes" : "NO");
 }
 
 }  // namespace DevLabDDP

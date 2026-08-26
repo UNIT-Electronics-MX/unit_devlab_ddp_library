@@ -14,8 +14,12 @@ class Console {
 
   void begin() {
     serial_.println("DevLab DDP master 1.0");
-    serial_.print("Expected device ID: 0x");
-    serial_.println(master_.expectedDeviceId(), HEX);
+    if (master_.expectedDeviceId() == DEVICE_ANY) {
+      serial_.println("Expected device ID: any registered DDP device");
+    } else {
+      serial_.print("Expected device ID: 0x");
+      serial_.println(master_.expectedDeviceId(), HEX);
+    }
     printHelp();
   }
 
