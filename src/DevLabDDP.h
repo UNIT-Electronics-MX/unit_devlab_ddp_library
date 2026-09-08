@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#include <DevLab_I2C_Orchestrator.h>
 #include "DevLabDDPProtocol.h"
 
 namespace DevLabDDP {
@@ -30,33 +31,22 @@ struct DeviceInfo {
 
 class Master {
  public:
-  explicit Master(TwoWire &wire, uint16_t expectedDeviceId)
-      : wire_(wire), expectedDeviceId_(expectedDeviceId) {}
+  explicit Master(DevLab_I2C_Orchestrator &orchestrator, uint16_t expectedDeviceId)
+      : orchestrator_(orchestrator), expectedDeviceId_(expectedDeviceId) {}
 
   uint16_t expectedDeviceId() const { return expectedDeviceId_; }
 
   bool ping(uint8_t address) {
-    wire_.beginTransmission(address);
-    return wire_.endTransmission() == 0;
+    return orchestrator_.ping(address);
   }
 
   bool writeByte(uint8_t address, uint8_t value) {
-    wire_.beginTransmission(address);
-    wire_.write(value);
-    return wire_.endTransmission() == 0;
+    return orchestrator_.writeCommand(address, value);
   }
 
   bool readCommand(uint8_t address, uint8_t command, uint8_t *data,
                    uint8_t length, uint16_t processingDelayMs = 5U) {
-    if (!writeByte(address, command)) return false;
-    delay(processingDelayMs);
-    uint8_t received = wire_.requestFrom(address, length);
-    if (received != length) {
-      while (wire_.available()) wire_.read();
-      return false;
-    }
-    for (uint8_t i = 0; i < length; ++i) data[i] = wire_.read();
-    return true;
+    return orchestrator_.readCommand(address, command, data, length, processingDelayMs);
   }
 
   bool identify(uint8_t address, DeviceInfo &info) {
@@ -103,11 +93,10 @@ class Master {
     uint8_t response = 0;
     if (!readCommand(oldAddress, CMD_SET_I2C_ADDR, &response, 1U, 10U) ||
         (response & 0x0FU) != RESP_I2C_ADDR_SET) return false;
-    if (!writeByte(oldAddress, newAddress)) return false;
-    delay(100U);
-    uint8_t received = wire_.requestFrom(oldAddress, (uint8_t)1U);
-    if (received != 1U || (wire_.read() & 0x0FU) != RESP_I2C_ADDR_SET) return false;
-    delay(300U);
+    
+    if (!orchestrator_.transact(oldAddress, newAddress, &response, 1U, 100U) ||
+    (response & 0x0FU) != RESP_I2C_ADDR_SET) return false;
+        delay(300U);
     return matchesExpectedDevice(newAddress);
   }
 
@@ -133,7 +122,7 @@ class Master {
   }
 
  private:
-  TwoWire &wire_;
+  DevLab_I2C_Orchestrator &orchestrator_;
   uint16_t expectedDeviceId_;
 };
 
