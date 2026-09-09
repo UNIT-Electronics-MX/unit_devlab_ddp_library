@@ -46,7 +46,7 @@ class Master {
 
   bool readCommand(uint8_t address, uint8_t command, uint8_t *data,
                    uint8_t length, uint16_t processingDelayMs = 5U) {
-    return orchestrator_.readCommand(address, command, data, length, processingDelayMs);
+    return orchestrator_.transact(address, command, data, length, processingDelayMs);
   }
 
   bool identify(uint8_t address, DeviceInfo &info) {
