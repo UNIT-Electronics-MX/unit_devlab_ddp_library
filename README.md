@@ -35,7 +35,6 @@ arduino-cli compile \
 src/DevLabDDPProtocol.h      DDP contract: command map, device IDs, capabilities
 src/DevLabDDP.h              Master class and DeviceInfo
 src/DevLabDDPConsole.h       Serial console front-end for a Master
-src/DevLabI2CBusRecovery.h   bus unblock helpers (standalone)
 ```
 
 `DevLabDDPProtocol.h` is a plain C header shared by both sides of the bus. The
