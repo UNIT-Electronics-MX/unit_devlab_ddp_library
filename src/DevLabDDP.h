@@ -16,6 +16,7 @@ constexpr uint16_t DEVICE_PIR      = 0x0104U;
 constexpr uint16_t DEVICE_HX0805   = 0x0105U;
 constexpr uint16_t DEVICE_GT36537  = 0x0106U;
 constexpr uint16_t DEVICE_RELAY    = 0x0108U;
+constexpr uint16_t DEVICE_HALL     = 0x0109U;
 constexpr uint16_t DEVICE_WS12XX_NEO = 0x0400U;
 
 struct DeviceInfo {
@@ -114,6 +115,15 @@ class Master {
     return true;
   }
 
+  /* Hall-effect module: true while a magnet is detected. The device is
+   * verified once by the caller (begin), so each poll is a single read. */
+  bool readHall(uint8_t address, bool &detected) {
+    uint8_t raw;
+    if (!readCommand(address, CMD_READ_GPIO0, &raw, 1U, 2U)) return false;
+    detected = raw != 0U;
+    return true;
+  }
+
   bool readGpio0(uint8_t address, bool &value) {
     uint8_t raw;
     if (!matchesExpectedDevice(address) ||
@@ -162,6 +172,7 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_HX0805:   return "hx0805-vibration";
     case DEVICE_GT36537:  return "gt36537-light";
     case DEVICE_RELAY:    return "relay";
+    case DEVICE_HALL:     return "hall-effect";
     case DEVICE_WS12XX_NEO: return "ws12xx-neopixel";
     default:              return "unknown";
   }
