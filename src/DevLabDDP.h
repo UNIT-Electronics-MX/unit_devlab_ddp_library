@@ -15,6 +15,7 @@ constexpr uint16_t DEVICE_DS18B20  = 0x0103U;
 constexpr uint16_t DEVICE_PIR      = 0x0104U;
 constexpr uint16_t DEVICE_HX0805   = 0x0105U;
 constexpr uint16_t DEVICE_GT36537  = 0x0106U;
+constexpr uint16_t DEVICE_RELAY    = 0x0108U;
 constexpr uint16_t DEVICE_WS12XX_NEO = 0x0400U;
 
 struct DeviceInfo {
@@ -121,7 +122,33 @@ class Master {
     return true;
   }
 
+  /* Relay commands (DDP_CAP_RELAY devices). The acknowledgement carries the
+   * response code in bits 0-3 and the relay state in bit 4 (1 = on). */
+  bool relayOn(uint8_t address, bool *state = nullptr) {
+    return relayCommand(address, CMD_RELAY_ON, state);
+  }
+
+  bool relayOff(uint8_t address, bool *state = nullptr) {
+    return relayCommand(address, CMD_RELAY_OFF, state);
+  }
+
+  bool relayToggle(uint8_t address, bool *state = nullptr) {
+    return relayCommand(address, CMD_RELAY_TOGGLE, state);
+  }
+
+  bool readRelay(uint8_t address, bool &state) {
+    return readGpio0(address, state);
+  }
+
  private:
+  bool relayCommand(uint8_t address, uint8_t command, bool *state) {
+    uint8_t response = 0;
+    if (!matchesExpectedDevice(address) ||
+        !readCommand(address, command, &response, 1U, 2U)) return false;
+    if (state != nullptr) *state = (response & 0x10U) != 0U;
+    return true;
+  }
+
   DevLab_I2C_Orchestrator &orchestrator_;
   uint16_t expectedDeviceId_;
 };
@@ -134,6 +161,7 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_PIR:      return "pir";
     case DEVICE_HX0805:   return "hx0805-vibration";
     case DEVICE_GT36537:  return "gt36537-light";
+    case DEVICE_RELAY:    return "relay";
     case DEVICE_WS12XX_NEO: return "ws12xx-neopixel";
     default:              return "unknown";
   }
