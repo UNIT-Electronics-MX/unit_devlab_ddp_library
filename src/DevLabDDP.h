@@ -15,9 +15,18 @@ constexpr uint16_t DEVICE_DS18B20  = 0x0103U;
 constexpr uint16_t DEVICE_PIR      = 0x0104U;
 constexpr uint16_t DEVICE_HX0805   = 0x0105U;
 constexpr uint16_t DEVICE_GT36537  = 0x0106U;
+constexpr uint16_t DEVICE_DPAD     = 0x0107U;
 constexpr uint16_t DEVICE_RELAY    = 0x0108U;
 constexpr uint16_t DEVICE_HALL     = 0x0109U;
+constexpr uint16_t DEVICE_BUTTON   = 0x0110U;
 constexpr uint16_t DEVICE_WS12XX_NEO = 0x0400U;
+
+/* D-Pad button masks. Combine with | and test individual buttons with &. */
+constexpr uint8_t DPAD_NONE = 0U;
+constexpr uint8_t DPAD_S1 = 1U << 0;
+constexpr uint8_t DPAD_S2 = 1U << 1;
+constexpr uint8_t DPAD_S3 = 1U << 2;
+constexpr uint8_t DPAD_S4 = 1U << 3;
 
 struct DeviceInfo {
   uint16_t deviceId = 0;
@@ -124,6 +133,27 @@ class Master {
     return true;
   }
 
+  /* Analog Hall module (DRV5055): raw 12-bit ADC sample, 0..4095. */
+  bool readHallRaw(uint8_t address, uint16_t &raw) {
+    uint8_t bytes[2];
+    if (!readCommand(address, CMD_READ_ADC0, bytes, 2U, 2U)) return false;
+    raw = ((uint16_t)bytes[0] | ((uint16_t)bytes[1] << 8)) & 0x0FFFU;
+    return true;
+  }
+
+
+  /* Current D-Pad state: 0..15, or -1 on I2C/invalid-frame errors.
+   * Identify the D-Pad once before polling; each call only reads its buttons.
+   * This synchronous read includes processingDelayMs and does not print,
+   * cache states, detect edges or require releasing buttons first. */
+  int16_t readButtons(uint8_t address, uint16_t processingDelayMs = 2U) {
+    uint8_t buttons = 0;
+    constexpr uint8_t command = 0x80U;  // D-Pad button snapshot.
+    if (!readCommand(address, command, &buttons, 1U, processingDelayMs) ||
+        (buttons & 0xF0U) != 0U) return -1;
+    return buttons;
+  }
+
   bool readGpio0(uint8_t address, bool &value) {
     uint8_t raw;
     if (!matchesExpectedDevice(address) ||
@@ -171,6 +201,8 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_PIR:      return "pir";
     case DEVICE_HX0805:   return "hx0805-vibration";
     case DEVICE_GT36537:  return "gt36537-light";
+    case DEVICE_DPAD:     return "d-pad";
+    case DEVICE_BUTTON:   return "button";
     case DEVICE_RELAY:    return "relay";
     case DEVICE_HALL:     return "hall-effect";
     case DEVICE_WS12XX_NEO: return "ws12xx-neopixel";
