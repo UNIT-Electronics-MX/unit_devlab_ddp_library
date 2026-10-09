@@ -19,6 +19,9 @@ constexpr uint16_t DEVICE_DPAD     = 0x0107U;
 constexpr uint16_t DEVICE_RELAY    = 0x0108U;
 constexpr uint16_t DEVICE_HALL     = 0x0109U;
 constexpr uint16_t DEVICE_BUTTON   = 0x0110U;
+constexpr uint16_t DEVICE_IR       = 0x0111U;
+constexpr uint16_t DEVICE_PHOTOINTERRUPTER = 0x0112U; 
+constexpr uint16_t DEVICE_LM35     = 0x0113U;
 constexpr uint16_t DEVICE_WS12XX_NEO = 0x0400U;
 
 /* D-Pad button masks. Combine with | and test individual buttons with &. */
@@ -205,6 +208,9 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_BUTTON:   return "button";
     case DEVICE_RELAY:    return "relay";
     case DEVICE_HALL:     return "hall-effect";
+    case DEVICE_IR:       return "infrared";
+    case DEVICE_LM35:     return "lm35-temperature";
+    case DEVICE_PHOTOINTERRUPTER: return "photo-interrupter";
     case DEVICE_WS12XX_NEO: return "ws12xx-neopixel";
     default:              return "unknown";
   }
