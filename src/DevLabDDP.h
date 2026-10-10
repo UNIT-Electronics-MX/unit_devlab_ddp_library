@@ -9,6 +9,7 @@
 namespace DevLabDDP {
 
 constexpr uint16_t DEVICE_ANY      = 0x0000U;
+constexpr uint16_t DEVICE_TEMT6000_LEGACY = 0x0002U;
 constexpr uint16_t DEVICE_JOYSTICK = 0x0101U;
 constexpr uint16_t DEVICE_TEMT6000 = 0x0102U;
 constexpr uint16_t DEVICE_DS18B20  = 0x0103U;
@@ -30,6 +31,19 @@ constexpr uint8_t DPAD_S1 = 1U << 0;
 constexpr uint8_t DPAD_S2 = 1U << 1;
 constexpr uint8_t DPAD_S3 = 1U << 2;
 constexpr uint8_t DPAD_S4 = 1U << 3;
+
+constexpr bool isTemt6000DeviceId(uint16_t deviceId) {
+  return deviceId == DEVICE_TEMT6000_LEGACY ||
+         deviceId == DEVICE_TEMT6000;
+}
+
+constexpr bool deviceIdMatches(uint16_t expectedDeviceId,
+                               uint16_t actualDeviceId) {
+  return expectedDeviceId == DEVICE_ANY ||
+         expectedDeviceId == actualDeviceId ||
+         (isTemt6000DeviceId(expectedDeviceId) &&
+          isTemt6000DeviceId(actualDeviceId));
+}
 
 struct DeviceInfo {
   uint16_t deviceId = 0;
@@ -91,7 +105,7 @@ class Master {
   bool matchesExpectedDevice(uint8_t address, DeviceInfo *result = nullptr) {
     DeviceInfo local;
     if (!identify(address, local) ||
-        (expectedDeviceId_ != DEVICE_ANY && local.deviceId != expectedDeviceId_)) return false;
+        !deviceIdMatches(expectedDeviceId_, local.deviceId)) return false;
     if (result != nullptr) *result = local;
     return true;
   }
@@ -199,6 +213,7 @@ class Master {
 inline const char *deviceName(uint16_t deviceId) {
   switch (deviceId) {
     case DEVICE_JOYSTICK: return "joystick";
+    case DEVICE_TEMT6000_LEGACY:
     case DEVICE_TEMT6000: return "temt6000";
     case DEVICE_DS18B20:  return "ds18b20";
     case DEVICE_PIR:      return "pir";
@@ -229,7 +244,7 @@ inline void printDeviceInfo(Print &out, uint8_t address, const DeviceInfo &info,
   out.print(" hardware="); out.print(info.hardwareMajor); out.print('.'); out.print(info.hardwareMinor);
   out.print(" caps=0x"); out.print(info.capabilities, HEX);
   out.print(" match=");
-  out.println(expectedDeviceId == DEVICE_ANY || info.deviceId == expectedDeviceId ? "yes" : "NO");
+  out.println(deviceIdMatches(expectedDeviceId, info.deviceId) ? "yes" : "NO");
 }
 
 }  // namespace DevLabDDP

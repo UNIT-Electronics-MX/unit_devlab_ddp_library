@@ -48,12 +48,14 @@ truth for both.
 ```cpp
 #include <Wire.h>
 #include <DevLabDDP.h>
+#include <DevLab_I2C_Orchestrator.h>
 
-DevLabDDP::Master master(Wire, DevLabDDP::DEVICE_JOYSTICK);
+DevLab_I2C_Orchestrator bus(Wire);
+DevLabDDP::Master master(bus, DevLabDDP::DEVICE_JOYSTICK);
 
 void setup() {
   Serial.begin(115200);
-  Wire.begin();
+  bus.begin();
 
   DevLabDDP::DeviceInfo info;
   if (master.identify(0x28, info)) {
@@ -73,6 +75,11 @@ void loop() {
 Pass `DEVICE_ANY` as the expected device ID to build a universal master that
 accepts any registered DDP node.
 
+`DEVICE_TEMT6000` accepts both the production ID `0x0102` and the legacy
+factory-batch ID `0x0002`. `DeviceInfo::deviceId` retains the ID actually
+reported by the device so applications can distinguish the variants when
+needed.
+
 ## API
 
 `DevLabDDP::Master`
@@ -91,9 +98,9 @@ accepts any registered DDP node.
 Address changes and resets are rejected when the node does not match the
 master's expected device ID.
 
-Known device IDs are exposed as `DEVICE_ANY`, `DEVICE_JOYSTICK`,
-`DEVICE_TEMT6000`, `DEVICE_DS18B20`, `DEVICE_PIR` and `DEVICE_WS12XX_NEO`.
-`deviceName(id)` maps them to printable names.
+Known device IDs are exposed as `DEVICE_ANY`, `DEVICE_TEMT6000_LEGACY`,
+`DEVICE_JOYSTICK`, `DEVICE_TEMT6000`, `DEVICE_DS18B20`, `DEVICE_PIR` and
+`DEVICE_WS12XX_NEO`. `deviceName(id)` maps both TEMT6000 IDs to `temt6000`.
 
 ## Serial console
 
