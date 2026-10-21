@@ -9,11 +9,12 @@
 namespace DevLabDDP {
 
 constexpr uint16_t DEVICE_ANY      = 0x0000U;
+constexpr uint16_t DEVICE_TEMT6000 = 0x0100U;
 constexpr uint16_t DEVICE_TEMT6000_LEGACY = 0x0002U;
 constexpr uint16_t DEVICE_JOYSTICK = 0x0101U;
-constexpr uint16_t DEVICE_TEMT6000 = 0x0102U;
-constexpr uint16_t DEVICE_DS18B20  = 0x0103U;
-constexpr uint16_t DEVICE_PIR      = 0x0104U;
+constexpr uint16_t DEVICE_DS18B20  = 0x0102U;
+constexpr uint16_t DEVICE_PIR      = 0x0103U;
+constexpr uint16_t DEVICE_SLIDER_POT = 0x0104U;
 constexpr uint16_t DEVICE_HX0805   = 0x0105U;
 constexpr uint16_t DEVICE_GT36537  = 0x0106U;
 constexpr uint16_t DEVICE_DPAD     = 0x0107U;
@@ -23,6 +24,8 @@ constexpr uint16_t DEVICE_BUTTON   = 0x0110U;
 constexpr uint16_t DEVICE_IR       = 0x0111U;
 constexpr uint16_t DEVICE_PHOTOINTERRUPTER = 0x0112U; 
 constexpr uint16_t DEVICE_LM35     = 0x0113U;
+constexpr uint16_t DEVICE_ENCODER    = 0x0114U;
+constexpr uint16_t DEVICE_TOUCH    = 0x0115U;
 constexpr uint16_t DEVICE_WS12XX_NEO = 0x0400U;
 
 /* D-Pad button masks. Combine with | and test individual buttons with &. */
@@ -217,6 +220,7 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_TEMT6000: return "temt6000";
     case DEVICE_DS18B20:  return "ds18b20";
     case DEVICE_PIR:      return "pir";
+    case DEVICE_SLIDER_POT: return "slider-pot";
     case DEVICE_HX0805:   return "hx0805-vibration";
     case DEVICE_GT36537:  return "gt36537-light";
     case DEVICE_DPAD:     return "d-pad";
@@ -226,6 +230,8 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_IR:       return "infrared";
     case DEVICE_LM35:     return "lm35-temperature";
     case DEVICE_PHOTOINTERRUPTER: return "photo-interrupter";
+    case DEVICE_ENCODER:  return "encoder";
+    case DEVICE_TOUCH:    return "touch";
     case DEVICE_WS12XX_NEO: return "ws12xx-neopixel";
     default:              return "unknown";
   }
