@@ -51,7 +51,7 @@
 #define CMD_SET_TOGGLE_TIME       0xA3U /* next write is units of 25 ms */
 #define CMD_GET_TOGGLE_TIME       0xA4U
 
-/* WS12XX/NeoPixel actuator extension (device ID 0x0400). */
+/* WS12XX/NeoPixel actuator extension (slider device ID 0x0104). */
 #define CMD_NEO_SET_PIXEL         0xB0U /* next: index, R, G, B */
 #define CMD_NEO_FILL              0xB1U /* next: R, G, B */
 #define CMD_NEO_CLEAR             0xB2U

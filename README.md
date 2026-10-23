@@ -100,7 +100,9 @@ master's expected device ID.
 
 Known device IDs are exposed as `DEVICE_ANY`, `DEVICE_TEMT6000_LEGACY`,
 `DEVICE_JOYSTICK`, `DEVICE_TEMT6000`, `DEVICE_DS18B20`, `DEVICE_PIR` and
-`DEVICE_WS12XX_NEO`. `deviceName(id)` maps both TEMT6000 IDs to `temt6000`.
+`DEVICE_WS12XX_NEO`. WS12XX uses the slider ID `0x0104`, so
+`DEVICE_WS12XX_NEO` aliases `DEVICE_SLIDER_POT`. `deviceName(id)` maps both
+TEMT6000 IDs to `temt6000`.
 
 ## Serial console
 

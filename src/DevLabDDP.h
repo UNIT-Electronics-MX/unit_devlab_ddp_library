@@ -26,7 +26,8 @@ constexpr uint16_t DEVICE_PHOTOINTERRUPTER = 0x0112U;
 constexpr uint16_t DEVICE_LM35     = 0x0113U;
 constexpr uint16_t DEVICE_ENCODER    = 0x0114U;
 constexpr uint16_t DEVICE_TOUCH    = 0x0115U;
-constexpr uint16_t DEVICE_WS12XX_NEO = 0x0400U;
+// WS12XX exposes the slider ID; NeoPixel commands are an extension of it.
+constexpr uint16_t DEVICE_WS12XX_NEO = DEVICE_SLIDER_POT;
 
 /* D-Pad button masks. Combine with | and test individual buttons with &. */
 constexpr uint8_t DPAD_NONE = 0U;
@@ -220,7 +221,7 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_TEMT6000: return "temt6000";
     case DEVICE_DS18B20:  return "ds18b20";
     case DEVICE_PIR:      return "pir";
-    case DEVICE_SLIDER_POT: return "slider-pot";
+    case DEVICE_SLIDER_POT: return "slider-pot/ws12xx-neopixel";
     case DEVICE_HX0805:   return "hx0805-vibration";
     case DEVICE_GT36537:  return "gt36537-light";
     case DEVICE_DPAD:     return "d-pad";
@@ -232,7 +233,6 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_PHOTOINTERRUPTER: return "photo-interrupter";
     case DEVICE_ENCODER:  return "encoder";
     case DEVICE_TOUCH:    return "touch";
-    case DEVICE_WS12XX_NEO: return "ws12xx-neopixel";
     default:              return "unknown";
   }
 }
