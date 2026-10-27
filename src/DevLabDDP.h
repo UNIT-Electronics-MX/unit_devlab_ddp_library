@@ -26,6 +26,8 @@ constexpr uint16_t DEVICE_PHOTOINTERRUPTER = 0x0112U;
 constexpr uint16_t DEVICE_LM35     = 0x0113U;
 constexpr uint16_t DEVICE_ENCODER    = 0x0114U;
 constexpr uint16_t DEVICE_TOUCH    = 0x0115U;
+constexpr uint16_t DEVICE_TRAFFIC_LIGHTS   = 0x0116U; 
+constexpr uint16_t DEVICE_PWM   = 0x0117U;
 // WS12XX exposes the slider ID; NeoPixel commands are an extension of it.
 constexpr uint16_t DEVICE_WS12XX_NEO = DEVICE_SLIDER_POT;
 
@@ -233,6 +235,8 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_PHOTOINTERRUPTER: return "photo-interrupter";
     case DEVICE_ENCODER:  return "encoder";
     case DEVICE_TOUCH:    return "touch";
+    case DEVICE_TRAFFIC_LIGHTS: return "traffic-lights";
+    case DEVICE_PWM:      return "pwm";
     default:              return "unknown";
   }
 }
