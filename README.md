@@ -134,3 +134,9 @@ depends=DevLabDDP (>=1.0.0)
 ## License
 
 See [LICENSE](LICENSE).
+
+## Continuous integration
+
+The `.github/workflows/check.yml` workflow runs `make check` on pushes and
+pull requests. This checks that the C protocol headers match and that the
+NeoPixel and buzzer device IDs and commands remain distinct.
