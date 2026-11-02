@@ -7,6 +7,10 @@
 #define DEVLAB_PROTOCOL_MAJOR 1U
 #define DEVLAB_PROTOCOL_MINOR 0U
 
+/* Dedicated PA2 actuator device IDs. */
+#define DDP_DEVICE_NEOPIXEL_PA2 0x0117U
+#define DDP_DEVICE_BUZZER_PA2   0x0118U
+
 /* Command blocks. */
 #define DDP_BLOCK_DEVICE_INFO  0x00U
 #define DDP_BLOCK_CONFIGURATION 0x20U
@@ -50,8 +54,12 @@
 #define CMD_RELAY_TOGGLE          0xA2U
 #define CMD_SET_TOGGLE_TIME       0xA3U /* next write is units of 25 ms */
 #define CMD_GET_TOGGLE_TIME       0xA4U
+#define CMD_BUZZER_PLAY           0xA9U /* next: freq_le16, duty_percent, duration_ms_le16 */
+#define CMD_BUZZER_STOP           0xAAU
+#define CMD_BUZZER_GET_STATE      0xABU /* [active, freq_lo, freq_hi, duty_percent] */
 
-/* WS12XX/NeoPixel actuator extension (slider device ID 0x0104). */
+/* NeoPixel actuators: WS12xx ID 0x0104 and dedicated PA2 ID 0x0117.
+ * The ADC-dependent commands 0xB6..0xB8 apply only to WS12xx. */
 #define CMD_NEO_SET_PIXEL         0xB0U /* next: index, R, G, B */
 #define CMD_NEO_FILL              0xB1U /* next: R, G, B */
 #define CMD_NEO_CLEAR             0xB2U
@@ -61,6 +69,13 @@
 #define CMD_NEO_CCT_MODE          0xB6U /* next: 0 warm, 1 cool */
 #define CMD_NEO_GET_INTENSITY     0xB7U /* response: ADC mapped to 0..255 */
 #define CMD_NEO_RGB_COLOR         0xB8U /* next: R, G, B; ADC controls brightness */
+#define CMD_NEO_SET_BUFFERED      0xB9U /* next: index, R, G, B; show separately */
+#define CMD_NEO_SET_COUNT         0xBAU /* next: count, 1..32 */
+#define CMD_NEO_GET_COUNT         0xBBU /* response: count */
+#define CMD_NEO_SEQUENCE          0xBCU /* next: mode, period in 10 ms units */
+#define CMD_NEO_PRIMARY           0xBDU /* next: R, G, B */
+#define CMD_NEO_SECONDARY         0xBEU /* next: R, G, B */
+#define CMD_NEO_GET_SEQUENCE      0xBFU /* response: mode, period */
 
 /* 0xF0-0xFF: system and diagnostics. */
 #define CMD_RESET                 0xF0U

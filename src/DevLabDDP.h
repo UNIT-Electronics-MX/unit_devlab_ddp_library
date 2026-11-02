@@ -27,7 +27,11 @@ constexpr uint16_t DEVICE_LM35     = 0x0113U;
 constexpr uint16_t DEVICE_ENCODER    = 0x0114U;
 constexpr uint16_t DEVICE_TOUCH    = 0x0115U;
 constexpr uint16_t DEVICE_TRAFFIC_LIGHTS   = 0x0116U; 
-constexpr uint16_t DEVICE_PWM   = 0x0117U;
+constexpr uint16_t DEVICE_NEOPIXEL_PA2 = DDP_DEVICE_NEOPIXEL_PA2;
+constexpr uint16_t DEVICE_BUZZER = DDP_DEVICE_BUZZER_PA2;
+constexpr uint16_t DEVICE_PWM = DEVICE_BUZZER;
+static_assert(DEVICE_NEOPIXEL_PA2 != DEVICE_BUZZER,
+              "NeoPixel and buzzer need unique device IDs");
 // WS12XX exposes the slider ID; NeoPixel commands are an extension of it.
 constexpr uint16_t DEVICE_WS12XX_NEO = DEVICE_SLIDER_POT;
 
@@ -236,7 +240,8 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_ENCODER:  return "encoder";
     case DEVICE_TOUCH:    return "touch";
     case DEVICE_TRAFFIC_LIGHTS: return "traffic-lights";
-    case DEVICE_PWM:      return "pwm";
+    case DEVICE_NEOPIXEL_PA2: return "neopixel-pa2";
+    case DEVICE_BUZZER:   return "buzzer-pwm";
     default:              return "unknown";
   }
 }
