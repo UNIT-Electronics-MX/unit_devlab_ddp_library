@@ -80,9 +80,10 @@ factory-batch ID `0x0002`. `DeviceInfo::deviceId` retains the ID actually
 reported by the device so applications can distinguish the variants when
 needed.
 
-The PA2 NeoPixel controller reports `DEVICE_NEOPIXEL_PA2` (`0x0117`) at
-I2C `0x37`. The PA2 passive buzzer controller reports `DEVICE_BUZZER`
-(`0x0118`) at I2C `0x38`. `DEVICE_PWM` now aliases `DEVICE_BUZZER`; the
+The UE0170 - DevLab: I2C RGB LED Module reports `DEVICE_NEOPIXEL_PA2`
+(`0x0117`) at I2C `0x37`. The UE0175 Devlab: I2C Buzzer Module reports
+`DEVICE_BUZZER` (`0x0118`) at I2C `0x38`. `DEVICE_PWM` now aliases
+`DEVICE_BUZZER`; the
 previous `0x0117` assignment collided with the NeoPixel controller.
 The common protocol headers define the NeoPixel commands `0xB0..0xBF` and
 the buzzer commands `CMD_BUZZER_PLAY` (`0xA9`), `CMD_BUZZER_STOP` (`0xAA`),
