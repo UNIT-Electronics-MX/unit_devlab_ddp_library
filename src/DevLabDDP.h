@@ -29,6 +29,7 @@ constexpr uint16_t DEVICE_TOUCH    = 0x0115U;
 constexpr uint16_t DEVICE_TRAFFIC_LIGHTS   = 0x0116U; 
 constexpr uint16_t DEVICE_NEOPIXEL_PA2 = DDP_DEVICE_NEOPIXEL_PA2;
 constexpr uint16_t DEVICE_BUZZER = DDP_DEVICE_BUZZER_PA2;
+constexpr uint16_t DEVICE_ANALOG_INTERFACE = 0x0119U;
 constexpr uint16_t DEVICE_PWM = DEVICE_BUZZER;
 static_assert(DEVICE_NEOPIXEL_PA2 != DEVICE_BUZZER,
               "NeoPixel and buzzer need unique device IDs");
@@ -226,6 +227,7 @@ inline const char *deviceName(uint16_t deviceId) {
     case DEVICE_TEMT6000_LEGACY:
     case DEVICE_TEMT6000: return "temt6000";
     case DEVICE_DS18B20:  return "ds18b20";
+    case DEVICE_ANALOG_INTERFACE: return "analog-interface";
     case DEVICE_PIR:      return "pir";
     case DEVICE_SLIDER_POT: return "slider-pot/ws12xx-neopixel";
     case DEVICE_HX0805:   return "hx0805-vibration";
