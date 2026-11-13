@@ -30,7 +30,6 @@ constexpr uint16_t DEVICE_TRAFFIC_LIGHTS   = 0x0116U;
 constexpr uint16_t DEVICE_NEOPIXEL_PA2 = DDP_DEVICE_NEOPIXEL_PA2;
 constexpr uint16_t DEVICE_BUZZER = DDP_DEVICE_BUZZER_PA2;
 constexpr uint16_t DEVICE_ANALOG_INTERFACE = 0x0119U;
-constexpr uint16_t DEVICE_PWM = DEVICE_BUZZER;
 static_assert(DEVICE_NEOPIXEL_PA2 != DEVICE_BUZZER,
               "NeoPixel and buzzer need unique device IDs");
 // WS12XX exposes the slider ID; NeoPixel commands are an extension of it.
